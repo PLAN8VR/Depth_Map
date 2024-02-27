@@ -49,6 +49,13 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         if context.scene.use_nodes and context.scene.node_tree:
             tree = context.scene.node_tree
 
+            # Set up the compositor for rendering the depth map
+            context.scene.render.use_compositing = True
+
+            # Clear existing nodes
+            for node in tree.nodes:
+                tree.nodes.remove(node)
+
             # Create Render Layers node
             render_layers_node = tree.nodes.new(type='CompositorNodeRLayers')
             render_layers_node.location = (-400, 0)
@@ -82,9 +89,6 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             file_output_node.format.color_depth = '16'
             file_output_node.file_slots.new("Depth")
             file_output_node.file_slots[0].path = os.path.basename(depthmap_path)
-
-            # Set up the compositor for rendering the depth map
-            context.scene.render.use_compositing = True
 
             # Connect nodes
             tree.links.new(render_layers_node.outputs["Depth"], invert_node.inputs["Color"])
