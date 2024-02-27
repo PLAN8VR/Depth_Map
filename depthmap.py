@@ -106,6 +106,7 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         context.scene.render.resolution_x = original_resolution_x
         context.scene.render.resolution_y = original_resolution_y
         context.scene.render.resolution_percentage = original_percentage_scale
+        context.scene.render.film_transparent = False
 
         return {'FINISHED'}
 
@@ -135,4 +136,3 @@ def unregister():
 
 if __name__ == "__main__":
     register()
-    
