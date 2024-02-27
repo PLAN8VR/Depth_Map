@@ -97,9 +97,10 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
 
             # Set film transparent to True for a transparent background
             context.scene.render.film_transparent = True
-            context.scene.view_layers["ViewLayer"].use_pass_z = True
 
-
+            # Set Render engine to EEVEE
+            context.scene.render.engine = 'BLENDER_EEVEE'
+           
             # Render the image
             bpy.ops.render.render(write_still=True)
 
