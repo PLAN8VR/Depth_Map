@@ -1,5 +1,9 @@
 bl_info = {
     "name": "True Depthmap Export",
+    "description": "A VERY basic one click depth map exporter - button is in the render properties tab",
+    "author": "A Wood",
+    "doc_url": "https://github.com/solosails/Depth_Map",
+    "tracker_url": "https://github.com/solosails/Depth_Map/issues",
     "blender": (4, 0, 0),
     "category": "Render",
 }
@@ -44,19 +48,24 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
 
             # Create Render Layers node
             render_layers_node = tree.nodes.new(type='CompositorNodeRLayers')
-            render_layers_node.location = (-200, 0)
+            render_layers_node.location = (-400, 0)
 
             # Create Invert node
             invert_node = tree.nodes.new(type='CompositorNodeInvert')
-            invert_node.location = (0, 100)
+            invert_node.location = (-100, -200)
 
             # Create Normalize node
             normalize_node = tree.nodes.new(type='CompositorNodeNormalize')
-            normalize_node.location = (200, 0)
+            normalize_node.location = (100, -200)
 
             # Create Viewer node
             viewer_node = tree.nodes.new(type='CompositorNodeViewer')
-            viewer_node.location = (400, 0)
+            viewer_node.location = (600, -200)
+
+            # Create Set Alpha node
+            set_alpha_node = tree.nodes.new(type='CompositorNodeSetAlpha')
+            set_alpha_node.location = (300, 0)
+            
 
             # Create a File Output node for the depth map
             file_output_node = tree.nodes.new(type='CompositorNodeOutputFile')
@@ -76,13 +85,15 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
 
             # Connect nodes
             tree.links.new(render_layers_node.outputs["Depth"], invert_node.inputs["Color"])
+            tree.links.new(render_layers_node.outputs["Alpha"], set_alpha_node.inputs["Alpha"])
+            tree.links.new(render_layers_node.outputs["Alpha"], viewer_node.inputs["Alpha"])
             tree.links.new(invert_node.outputs["Color"], normalize_node.inputs["Value"])
-            tree.links.new(normalize_node.outputs["Value"], file_output_node.inputs["Image"])
-            tree.links.new(normalize_node.outputs["Value"], viewer_node.inputs["Image"])
+            tree.links.new(normalize_node.outputs["Value"], set_alpha_node.inputs["Image"])
+            tree.links.new(set_alpha_node.outputs["Image"], file_output_node.inputs["Depth"])
+            tree.links.new(set_alpha_node.outputs["Image"], viewer_node.inputs["Image"])           
 
-            # Set the output file path for the depth map
-            file_output_node.file_slots.new("Depth")
-            file_output_node.file_slots[0].path = os.path.basename(depthmap_path)
+            # Set film transparent to True for a transparent background
+            context.scene.render.film_transparent = True
 
             # Render the image
             bpy.ops.render.render(write_still=True)
@@ -124,3 +135,4 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+    
