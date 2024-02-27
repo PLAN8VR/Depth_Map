@@ -2,8 +2,8 @@ bl_info = {
     "name": "True Depthmap Export",
     "description": "A VERY basic one click depth map exporter - button is in the render properties tab",
     "author": "A Wood",
-    "doc_url": "https://github.com/PLANVR/Depth_Map",
-    "tracker_url": "https://github.com/PLAN8VR/Depth_Map/issues",
+    "doc_url": "https://github.com/solosails/Depth_Map",
+    "tracker_url": "https://github.com/solosails/Depth_Map/issues",
     "blender": (4, 0, 2),
     "category": "Render",
     "version": (0, 0, 1),
@@ -21,7 +21,7 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
     filename_ext = ".png"
 
     filter_glob: bpy.props.StringProperty(
-        defaults="*.exr;*.jpg;*.jpeg;*.png;*.tif;*.tiff;*.bmp'",
+        defaults="*.png;",
         options={'HIDDEN'},
     )
 
@@ -39,13 +39,15 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         context.scene.render.resolution_y = 1024
         context.scene.render.resolution_percentage = 100
 
+        # Ensure compositor nodes are enabled
+        context.scene.use_nodes = True
+
+        # Ensure Z pass is enabled
+        context.scene.view_layers["ViewLayer"].use_pass_z = True
+
         # Ensure that the scene has a compositor node tree
         if context.scene.use_nodes and context.scene.node_tree:
             tree = context.scene.node_tree
-
-            # Clear existing nodes
-            for node in tree.nodes:
-                tree.nodes.remove(node)
 
             # Create Render Layers node
             render_layers_node = tree.nodes.new(type='CompositorNodeRLayers')
@@ -95,6 +97,8 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
 
             # Set film transparent to True for a transparent background
             context.scene.render.film_transparent = True
+            context.scene.view_layers["ViewLayer"].use_pass_z = True
+
 
             # Render the image
             bpy.ops.render.render(write_still=True)
