@@ -4,8 +4,9 @@ bl_info = {
     "author": "A Wood",
     "doc_url": "https://github.com/solosails/Depth_Map",
     "tracker_url": "https://github.com/solosails/Depth_Map/issues",
-    "blender": (4, 0, 0),
+    "blender": (4, 0, 2),
     "category": "Render",
+    "version": (0, 0, 1),
 }
 
 import bpy
