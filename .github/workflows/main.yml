@@ -1,0 +1,79 @@
+name: 'Blender Addon Release'
+description: 'Action to automatically build the Blender add-on and store the resulting .zip artifact.'
+author: 'Andreas Gajdosik, BlenderKit'
+
+branding:
+  icon: 'box'
+  color: 'orange'
+
+inputs:
+  version:
+    description: 'Version of the release, format: X.Y.Z (major.minor.patch).'
+  release_stage:
+    description: 'Stage of the release, available options: alpha, beta, rc (release candidate), gold (final public release).'
+    default: 'gold'
+    options: [ 'alpha', 'beta', 'rc', 'gold']
+  artifact_name:
+    description: 'Name of the artifact (previously uploaded by build job) to be downloaded and used in name of final release artifact. If left empty the action will use repository name.'
+    default: ''
+  release_name:
+    description: 'Name of the release - will be used in title of the release. If left empty, action will use repository name.'
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set release name
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.release_name }}" ]; then
+          echo "RELEASE_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+        else
+          echo "RELEASE_NAME=${{ inputs.release_name }}" >> $GITHUB_ENV
+        fi
+
+    - name: Set release name suffix
+      shell: bash
+      run: |
+        if [ "${{ inputs.release_stage }}" != "gold" ]; then
+          echo "RELEASE_SUFFIX=-${{ inputs.release_stage }}" >> $GITHUB_ENV
+        else
+          echo "RELEASE_SUFFIX=" >> $GITHUB_ENV
+        fi
+
+    - name: Create out directory
+      run: mkdir out
+      shell: bash
+
+    - name: Download artifact with defined artifact_name
+      if: ${{ inputs.artifact_name != '' }}
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: ./out
+
+    - name: Download artifact with repository name
+      if: ${{ inputs.artifact_name == '' }}
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ github.event.repository.name }}
+        path: ./out
+
+    - name: Zip contents of out
+      shell: bash
+      run: |
+        zip -r ./out/${{ inputs.artifact_name }}-v${{ inputs.version }}${{ env.RELEASE_SUFFIX }}.zip ./out/
+      
+    - name: LS
+      shell: bash
+      run: ls ./out
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        draft: true
+        name: ${{ env.RELEASE_NAME }} v${{ inputs.version }}${{ env.RELEASE_SUFFIX }}
+        prerelease: ${{ inputs.release_stage != 'gold' && 'true' || 'false' }}
+        tag_name: v${{inputs.version}}
+        files: ./out/${{ inputs.artifact_name }}-v${{ inputs.version }}${{ env.RELEASE_SUFFIX }}.zip
+
