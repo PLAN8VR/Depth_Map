@@ -6,7 +6,7 @@ bl_info = {
     "tracker_url": "https://github.com/PLAN8VR/Depth_Map/issues",
     "blender": (4, 0, 2),
     "category": "Render",
-    "version": (0, 0, 1),
+    "version": (0, 0, 5),
 }
 
 import bpy
