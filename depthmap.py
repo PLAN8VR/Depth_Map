@@ -4,8 +4,8 @@ bl_info = {
     "author": "PLAN8",
     "doc_url": "https://github.com/PLAN8VR/Depth_Map",
     "tracker_url": "https://github.com/PLAN8VR/Depth_Map/issues",
-    "blender": (4, 0, 2),
     "category": "Render",
+    "blender": (4, 0, 2),
     "version": (0, 0, 1),
 }
 
