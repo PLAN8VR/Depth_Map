@@ -46,7 +46,8 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         context.scene.use_nodes = True
 
         # Ensure Z pass is enabled
-        context.scene.view_layers["ViewLayer"].use_pass_z = True
+        context.scene.view_layers["RenderLayer"].use_pass_z = True
+
 
         # Ensure that the scene has a compositor node tree
         if context.scene.use_nodes and context.scene.node_tree:
