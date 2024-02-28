@@ -1,7 +1,7 @@
 bl_info = {
     "name": "True Depthmap Export",
     "description": "A VERY basic one click depth map exporter - button is in the render properties tab",
-    "author": "A Wood",
+    "author": "PLAN8",
     "doc_url": "https://github.com/PLAN8VR/Depth_Map",
     "tracker_url": "https://github.com/PLAN8VR/Depth_Map/issues",
     "blender": (4, 0, 2),
