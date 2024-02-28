@@ -1,2 +1,0 @@
-              - name: Blender Addon Release
-                uses: BlenderKit/blender-addon-release@v0.1
