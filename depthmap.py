@@ -33,6 +33,9 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         original_resolution_x = context.scene.render.resolution_x
         original_resolution_y = context.scene.render.resolution_y
         original_percentage_scale = context.scene.render.resolution_percentage
+        original_render_engine = context.scene.render.engine
+        original_view_transform = context.scene.view_settings.view_transform
+        original_film_transparency = context.scene.render.film_transparent
 
         # Set new resolution settings
         context.scene.render.resolution_x = 1024
@@ -51,6 +54,9 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
 
             # Set up the compositor for rendering the depth map
             context.scene.render.use_compositing = True
+
+            # Set view transform to standard
+            context.scene.view_settings.view_transform = 'Standard'
 
             # Clear existing nodes
             for node in tree.nodes:
@@ -116,7 +122,9 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         context.scene.render.resolution_x = original_resolution_x
         context.scene.render.resolution_y = original_resolution_y
         context.scene.render.resolution_percentage = original_percentage_scale
-        context.scene.render.film_transparent = False
+        context.scene.render.engine = original_render_engine
+        context.scene.view_settings.view_transform = original_view_transform
+        context.scene.render.film_transparent = original_film_transparency
 
         return {'FINISHED'}
 
