@@ -55,6 +55,9 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             # Set view transform to standard
             context.scene.view_settings.view_transform = 'Standard'
 
+            # Ensure Z pass is enabled
+            bpy.context.scene.view_layers["View Layer"].use_pass_z = True
+
             # Clear existing nodes
             for node in tree.nodes:
                 tree.nodes.remove(node)
@@ -104,9 +107,6 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
 
             # Set film transparent to True for a transparent background
             context.scene.render.film_transparent = True
-
-            # Ensure Z pass is enabled
-            bpy.context.scene.view_layers["View Layer"].use_pass_z = True
 
             # Set Render engine to EEVEE
             context.scene.render.engine = 'BLENDER_EEVEE'
