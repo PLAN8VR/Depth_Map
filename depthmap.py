@@ -45,10 +45,6 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         # Ensure compositor nodes are enabled
         context.scene.use_nodes = True
 
-        # Ensure Z pass is enabled
-        context.scene.view_layers["RenderLayer"].use_pass_z = True
-
-
         # Ensure that the scene has a compositor node tree
         if context.scene.use_nodes and context.scene.node_tree:
             tree = context.scene.node_tree
@@ -108,6 +104,9 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
 
             # Set film transparent to True for a transparent background
             context.scene.render.film_transparent = True
+
+            # Ensure Z pass is enabled
+            bpy.context.scene.view_layers["View Layer"].use_pass_z = True
 
             # Set Render engine to EEVEE
             context.scene.render.engine = 'BLENDER_EEVEE'
