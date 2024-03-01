@@ -56,7 +56,7 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             context.scene.view_settings.view_transform = 'Standard'
 
             # Ensure Z pass is enabled
-            bpy.context.scene.view_layers["View Layer"].use_pass_z = True
+            bpy.context.scene.view_layers["RenderLayer"].use_pass_z = True
 
             # Clear existing nodes
             for node in tree.nodes:
