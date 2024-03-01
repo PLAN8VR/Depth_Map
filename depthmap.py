@@ -93,12 +93,14 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             file_output_node.format.color_mode = 'RGBA'
             file_output_node.format.color_depth = '16'
             file_output_node.file_slots.new("Depth")
+            file_output_node.file_slots.new("Diffuse")
             file_output_node.file_slots[0].path = os.path.basename(depthmap_path)
 
             # Connect nodes
             tree.links.new(render_layers_node.outputs["Depth"], invert_node.inputs["Color"])
             tree.links.new(render_layers_node.outputs["Alpha"], set_alpha_node.inputs["Alpha"])
             tree.links.new(render_layers_node.outputs["Alpha"], viewer_node.inputs["Alpha"])
+            tree.links.new(render_layers_node.outputs["Image"], file_output_node.inputs["Diffuse"])
             tree.links.new(invert_node.outputs["Color"], normalize_node.inputs["Value"])
             tree.links.new(normalize_node.outputs["Value"], set_alpha_node.inputs["Image"])
             tree.links.new(set_alpha_node.outputs["Image"], file_output_node.inputs["Depth"])
@@ -117,12 +119,13 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             bpy.ops.render.render(write_still=True)
 
             print("Depth map saved to:", depthmap_path)
-            self.report({'INFO'}, "Depthmap saved successfully.")
+            self.report({'INFO'}, "Depthmap and diffuse image saved successfully")
         else:
             print("Error: Compositor not set up in the scene.")
             self.report({'INFO'}, " ! Error ! Depthmap not saved.")
 
         # Restore original render settings
+
         context.scene.render.resolution_x = original_resolution_x
         context.scene.render.resolution_y = original_resolution_y
         context.scene.render.resolution_percentage = original_percentage_scale
