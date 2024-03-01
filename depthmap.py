@@ -117,8 +117,10 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             bpy.ops.render.render(write_still=True)
 
             print("Depth map saved to:", depthmap_path)
+            self.report({'INFO'}, "Depthmap saved successfully.")
         else:
             print("Error: Compositor not set up in the scene.")
+            self.report({'INFO'}, " ! Error ! Depthmap not saved.")
 
         # Restore original render settings
         context.scene.render.resolution_x = original_resolution_x
