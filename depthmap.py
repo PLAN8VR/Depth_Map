@@ -14,6 +14,7 @@ import os
 from bpy_extras.io_utils import ExportHelper
 
 class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
+    """Export Depthmap"""
     bl_idname = "export.true_depthmap"
     bl_label = "Export True Depthmap"
     bl_options = {'PRESET'}
@@ -157,3 +158,6 @@ def register():
 def unregister():
     bpy.utils.unregister_class(ExportTrueDepthmap)
     bpy.utils.unregister_class(RENDER_PT_true_depth)
+
+if __name__ == "__main__":
+    register()
