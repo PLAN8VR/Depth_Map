@@ -157,7 +157,3 @@ def register():
 def unregister():
     bpy.utils.unregister_class(ExportTrueDepthmap)
     bpy.utils.unregister_class(RENDER_PT_true_depth)
-
-
-if __name__ == "__main__":
-    register()
