@@ -82,7 +82,6 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             set_alpha_node = tree.nodes.new(type='CompositorNodeSetAlpha')
             set_alpha_node.location = (300, 0)
             
-
             # Create a File Output node for the depth map
             file_output_node = tree.nodes.new(type='CompositorNodeOutputFile')
             file_output_node.label = 'Depth Output'
