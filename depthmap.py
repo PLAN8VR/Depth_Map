@@ -56,7 +56,7 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             context.scene.view_settings.view_transform = 'Standard'
 
             # Ensure Z pass is enabled
-            bpy.context.scene.view_layers["RenderLayer"].use_pass_z = True
+            context.scene.view_layers["RenderLayer"].use_pass_z = True
 
             # Clear existing nodes
             for node in tree.nodes:
@@ -103,8 +103,11 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             tree.links.new(invert_node.outputs["Color"], normalize_node.inputs["Value"])
             tree.links.new(normalize_node.outputs["Value"], set_alpha_node.inputs["Image"])
             tree.links.new(set_alpha_node.outputs["Image"], file_output_node.inputs["Depth"])
-            tree.links.new(set_alpha_node.outputs["Image"], viewer_node.inputs["Image"])           
+            tree.links.new(set_alpha_node.outputs["Image"], viewer_node.inputs["Image"])  
 
+            # Enable compositor backdrop - needs working out
+            # context.space_data["CompositorNodeTree"].show_backdrop = True
+         
             # Set film transparent to True for a transparent background
             context.scene.render.film_transparent = True
 
