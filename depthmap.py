@@ -147,7 +147,7 @@ class RENDER_PT_true_depth(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
 
-        layout.operator("export.true_depthmap", text="Export Depthmap (.png)")
+        layout.operator("export.true_depthmap", text="Export Depthmap (.png)", icon='IMAGE_ZDEPTH')
 
 
 def register():
