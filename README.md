@@ -1,6 +1,6 @@
 # Depth_Map
 
-A simple Blender plugin to export depth maps
+A simple Blender plugin to export depth maps. Initially useful for the AI depth control net workflow
 
 Addon creates a "one hit" button in the render settings tab that will set up a normalised z-pass compositor node and export a png depthmap.
 
