@@ -62,7 +62,7 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             # Set view settings
             context.scene.view_settings.look = 'None'
             
-            # Set colourspace (note to the Sepos, colour spelled correctly ;-))
+            # Set colourspace (note to the Yanks, colour spelled correctly ;-))
             context.scene.sequencer_colorspace_settings.name = 'Non-Color'
 
             # Ensure Z pass is enabled
