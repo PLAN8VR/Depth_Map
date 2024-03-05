@@ -13,6 +13,7 @@ import bpy
 import os
 from bpy_extras.io_utils import ExportHelper
 
+
 class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
     """Export Depthmap"""
     bl_idname = "export.true_depthmap"
@@ -82,7 +83,7 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             # Create Set Alpha node
             set_alpha_node = tree.nodes.new(type='CompositorNodeSetAlpha')
             set_alpha_node.location = (300, 0)
-            
+
             # Create a File Output node for the depth map
             file_output_node = tree.nodes.new(type='CompositorNodeOutputFile')
             file_output_node.label = 'Depth Output'
@@ -95,32 +96,42 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             file_output_node.format.color_depth = '16'
             file_output_node.file_slots.new("Depth")
             file_output_node.file_slots.new("Diffuse")
-            file_output_node.file_slots[0].path = os.path.basename(depthmap_path)
+            file_output_node.file_slots[0].path = os.path.basename(
+                depthmap_path)
 
             # Connect nodes
-            tree.links.new(render_layers_node.outputs["Depth"], invert_node.inputs["Color"])
-            tree.links.new(render_layers_node.outputs["Alpha"], set_alpha_node.inputs["Alpha"])
-            tree.links.new(render_layers_node.outputs["Alpha"], viewer_node.inputs["Alpha"])
-            tree.links.new(render_layers_node.outputs["Image"], file_output_node.inputs["Diffuse"])
-            tree.links.new(invert_node.outputs["Color"], normalize_node.inputs["Value"])
-            tree.links.new(normalize_node.outputs["Value"], set_alpha_node.inputs["Image"])
-            tree.links.new(set_alpha_node.outputs["Image"], file_output_node.inputs["Depth"])
-            tree.links.new(set_alpha_node.outputs["Image"], viewer_node.inputs["Image"])  
+            tree.links.new(
+                render_layers_node.outputs["Depth"], invert_node.inputs["Color"])
+            tree.links.new(
+                render_layers_node.outputs["Alpha"], set_alpha_node.inputs["Alpha"])
+            tree.links.new(
+                render_layers_node.outputs["Alpha"], viewer_node.inputs["Alpha"])
+            tree.links.new(
+                render_layers_node.outputs["Image"], file_output_node.inputs["Diffuse"])
+            tree.links.new(
+                invert_node.outputs["Color"], normalize_node.inputs["Value"])
+            tree.links.new(
+                normalize_node.outputs["Value"], set_alpha_node.inputs["Image"])
+            tree.links.new(
+                set_alpha_node.outputs["Image"], file_output_node.inputs["Depth"])
+            tree.links.new(
+                set_alpha_node.outputs["Image"], viewer_node.inputs["Image"])
 
             # Enable compositor backdrop - needs working out
             # context.space_data["CompositorNodeTree"].show_backdrop = True
-         
+
             # Set film transparent to True for a transparent background
             context.scene.render.film_transparent = True
 
             # Set Render engine to EEVEE
             context.scene.render.engine = 'BLENDER_EEVEE'
-           
+
             # Render the image
             bpy.ops.render.render(write_still=True)
 
             print("Depth map saved to:", depthmap_path)
-            self.report({'INFO'}, "Depthmap and diffuse image saved successfully")
+            self.report(
+                {'INFO'}, "Depthmap and diffuse image saved successfully")
         else:
             print("Error: Compositor not set up in the scene.")
             self.report({'INFO'}, " ! Error ! Depthmap not saved.")
@@ -147,7 +158,8 @@ class RENDER_PT_true_depth(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
 
-        layout.operator("export.true_depthmap", text="Export Depthmap (.png)", icon='IMAGE_ZDEPTH')
+        layout.operator("export.true_depthmap",
+                        text="Export Depthmap (.png)", icon='IMAGE_ZDEPTH')
 
 
 def register():
@@ -158,6 +170,7 @@ def register():
 def unregister():
     bpy.utils.unregister_class(ExportTrueDepthmap)
     bpy.utils.unregister_class(RENDER_PT_true_depth)
+
 
 if __name__ == "__main__":
     register()
