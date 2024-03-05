@@ -38,6 +38,8 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         original_render_engine = context.scene.render.engine
         original_view_transform = context.scene.view_settings.view_transform
         original_film_transparency = context.scene.render.film_transparent
+        original_view_settings = context.scene.view_settings.look
+        original_colour_space = context.scene.sequencer_colorspace_settings.name
 
         # Set new resolution settings
         context.scene.render.resolution_x = 1024
@@ -54,8 +56,14 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
             # Set up the compositor for rendering the depth map
             context.scene.render.use_compositing = True
 
-            # Set view transform to standard
-            context.scene.view_settings.view_transform = 'Standard'
+            # Set view transform to Raw
+            context.scene.view_settings.view_transform = 'Raw'
+            
+            # Set view settings
+            context.scene.view_settings.look = 'None'
+            
+            # Set colourspace (note to the Sepos, colour spelled correctly ;-))
+            context.scene.sequencer_colorspace_settings.name = 'Non-Color'
 
             # Ensure Z pass is enabled
             bpy.context.view_layer.use_pass_z = True
@@ -144,6 +152,8 @@ class ExportTrueDepthmap(bpy.types.Operator, ExportHelper):
         context.scene.render.engine = original_render_engine
         context.scene.view_settings.view_transform = original_view_transform
         context.scene.render.film_transparent = original_film_transparency
+        context.scene.view_settings.look = original_view_settings
+        context.scene.sequencer_colorspace_settings.name = original_colour_space
 
         return {'FINISHED'}
 
